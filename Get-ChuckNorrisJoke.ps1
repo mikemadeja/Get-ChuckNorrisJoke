@@ -1,27 +1,53 @@
+<#
+.SYNOPSIS
+
+Get a random Chuck Norris joke from an API
+
+.EXAMPLE
+
+PS> .\Get-ChuckNorrisJoke.ps1
+
+.EXAMPLE
+
+PS> .\Get-ChuckNorrisJoke.ps1 -JokeType dev
+#>
+
 [CmdletBinding()]
 Param (
-    [ValidateSet('explicit','nerdy')]
+    [ValidateSet(
+    'animal', 'career', 'celebrity', 'dev', 'explicit', 'fashion', 'food', 'history', 'money', 'movie', 'music', 'political', 'religion', 'science', 'sport', 'travel')]
     $JokeType
 )
 
-Function Get-RandomJokeType {
+function Get-RandomJokeType {
+    <#
+    .Description
+    #If JokeType parameter is not used, then pick a random one...
+    #>
     Write-Verbose -Message "Joke type not selected, random one being chosen..."
-    $JokeTypes = Invoke-WebRequest -Uri "http://api.icndb.com/categories" | ConvertFrom-Json
-    $JokeType = $JokeTypes.Value | Get-Random
+    $JokeTypes = Invoke-WebRequest -Uri "https://api.chucknorris.io/jokes/categories" | ConvertFrom-Json
+    [System.Collections.ArrayList]$JokeTypes = $JokeTypes
+    #Remove explicit to keep it PG...
+    $JokeTypes.Remove("explicit")
+    $JokeType = $JokeTypes | Get-Random
+    Write-Verbose "Joke Type: $JokeType"
     Write-Output $JokeType
 }
 
-Function Get-RandomJoke {
-    Param (
+function Get-RandomJoke {
+    <#
+    .Description
+    #Get the random joke...
+    #>
+    param (
         $JokeType
-    )
-    $Data = Invoke-WebRequest -Uri "http://api.icndb.com/jokes/random?limitTo=[$JokeType]" | ConvertFrom-Json
-    Write-Output ($Data.value.joke -replace "&quot;", "`"") 
+    ) 
+    $Data = Invoke-WebRequest -Uri "https://api.chucknorris.io/jokes/random?category=$JokeType"  | ConvertFrom-Json
+    Write-Output $Data.value
 }
 
-If (!$JokeType) {
+if (!$JokeType) {
     $JokeType = Get-RandomJokeType
 }
 
-Write-Verbose -Message "Joke Type: $JokeType"
 Get-RandomJoke -JokeType $JokeType 
