@@ -25,7 +25,13 @@ function Get-RandomJokeType {
     #If JokeType parameter is not used, then pick a random one...
     #>
     Write-Verbose -Message "Joke type not selected, random one being chosen..."
-    $JokeTypes = Invoke-WebRequest -Uri "https://api.chucknorris.io/jokes/categories" | ConvertFrom-Json
+    try {
+        $JokeTypes = Invoke-WebRequest -Uri "https://api.chucknorris.io/jokes/categories" | ConvertFrom-Json
+    }
+    catch {
+        #Need to add error
+    }
+    
     [System.Collections.ArrayList]$JokeTypes = $JokeTypes
     #Remove explicit to keep it PG...
     $JokeTypes.Remove("explicit")
@@ -41,9 +47,14 @@ function Get-RandomJoke {
     #>
     param (
         $JokeType
-    ) 
-    $Data = Invoke-WebRequest -Uri "https://api.chucknorris.io/jokes/random?category=$JokeType"  | ConvertFrom-Json
-    Write-Output $Data.value
+    )
+    try {
+        $Data = Invoke-WebRequest -Uri "https://api.chucknorris.io/jokes/random?category=$JokeType"  | ConvertFrom-Json
+        Write-Output $Data.value
+    }
+    catch {
+        #Need to add error
+    }
 }
 
 if (!$JokeType) {
