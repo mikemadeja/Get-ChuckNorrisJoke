@@ -1,4 +1,4 @@
-# How to use
+# How to use Get-ChuckNorrisJoke PowerShell functions
 
 Load Functions.ps1 by doing ```. .\Functions.ps1```
 
