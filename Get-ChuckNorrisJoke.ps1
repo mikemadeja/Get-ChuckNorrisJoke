@@ -7,9 +7,6 @@ Get a random Chuck Norris joke from an API
 
 PS> .\Get-ChuckNorrisJoke.ps1
 
-.EXAMPLE
-
-PS> .\Get-ChuckNorrisJoke.ps1 -JokeType dev
 #>
 
 [CmdletBinding()]
