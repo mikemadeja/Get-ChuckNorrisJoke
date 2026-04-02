@@ -21,3 +21,5 @@ Get-ChuckNorrisRandomJoke
 Get-ChuckNorrisCategories
 
 Get-ChuckNorrisFreeTextSearch -Query "Computer"
+
+##
